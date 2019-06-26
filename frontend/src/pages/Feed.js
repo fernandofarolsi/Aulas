@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import './Feed.css';
+import api from '../services/api';
+import  "./Feed.css";
 
 import more from '../assets/more.svg';
 import like from '../assets/like.svg';
@@ -7,19 +8,30 @@ import comment from '../assets/comment.svg';
 import send from '../assets/send.svg';
 
 class Feed extends Component {
+    state ={
+        feed: [],
+    };
+    async componentDidMount(){
+        const response = await api.get('post');
+
+        this.setState({ feed: response.data});
+
+    }
+
     render(){
         return(
-            <selection id="post-list">
-                <article>
+            <selection id="{post-list">
+                {this.state.feed.map(post =>(
+                    <article>
                     <header>
                         <div className= "user-info">
-                            <span>Fernando Rodrigues</span>
-                            <span className="place">Rolim de Moura</span>
+                            <span>{post.author}</span>
+                            <span className="place">{post.place}</span>
                         </div>
                         <img src={more} alt="Mais"/>
                     </header>
                     
-                    <img src="http://localhost:3333/files/D9RIS2OWkAAEC4A.jpg" alt="" />
+                    <img src={`http://localhost:3333/files/${post.image}`} alt="" />
 
                     <footer>
                         <div className="actions">
@@ -28,41 +40,16 @@ class Feed extends Component {
                             <img src={send} alt=""/>
                         </div>
 
-                        <strong>90 Curtidas</strong>
+                        <strong>{post.like} Curtidas</strong>
 
-                        <p>Um posto muito top
-                            <span>#Topzera #ENoisQVoa</span>
-                        </p>
-                    </footer>
-
-                </article>
-                <article>
-                    <header>
-                        <div className= "user-info">
-                            <span>Fernando Rodrigues</span>
-                            <span className="place">Rolim de Moura</span>
-                        </div>
-                        <img src={more} alt="Mais"/>
-                    </header>
-                    
-                    <img src="http://localhost:3333/files/D9RIS2OWkAAEC4A.jpg" alt="" />
-
-                    <footer>
-                        <div className="actions">
-                            <img src={like} alt=""/>
-                            <img src={comment} alt=""/>
-                            <img src={send} alt=""/>
-                        </div>
-
-                        <strong>90 Curtidas</strong>
-
-                        <p>Um posto muito top
-                            <span>#Topzera #ENoisQVoa</span>
+                        <p>{post.description}
+                            <span>{post.hashtags}</span>
                         </p>
                     </footer>
 
                 </article>
                 
+            ))}
 
 
             </selection>
